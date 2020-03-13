@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2217164485225470271}
   m_Layer: 0
   m_Name: Bullet
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -45,7 +45,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.03, y: 0.03, z: 0.1}
+  m_Size: {x: 0.1, y: 0.1, z: 0.1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1416676094559851754
 MonoBehaviour:
@@ -61,7 +61,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionPS: {fileID: 5198442708002844851, guid: 86e6563d43bc842d6a7dc297346dc103,
     type: 3}
-  speed: 5
+  speed: 20
   lifeTime: 3
   damage: 50
 --- !u!54 &2217164485225470271
