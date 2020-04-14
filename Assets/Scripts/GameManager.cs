@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
 
     private void SpawnEnemyTank()
     {
-        Vector3 _spawnPoint = new Vector3(Random.Range(1, spawnRange), 0.1f, Random.Range(1, spawnRange)) + new Vector3(player.transform.position.x, 0, player.transform.position.z);
+        Vector3 _spawnPoint = new Vector3(Random.Range(spawnRange / 2 , spawnRange), 0.1f, Random.Range(spawnRange / 2, spawnRange)) + new Vector3(player.transform.position.x, 0, player.transform.position.z);
         Instantiate(AITank, _spawnPoint, Quaternion.identity);
     }
 

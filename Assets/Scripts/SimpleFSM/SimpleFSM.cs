@@ -23,6 +23,8 @@ public class SimpleFSM : FSM
     private Material chaseMat;
     [SerializeField]
     private Material attackMat;
+    [SerializeField]
+    private Material blownUpMat;
     private Renderer renderer;
     [SerializeField]
     private GameObject bullet;
@@ -31,6 +33,7 @@ public class SimpleFSM : FSM
     private bool isDead = false;
     private int health;
     new private Rigidbody rigidbody;
+    private HealthBar healthBar;
 
     protected override void Initialize()
     {
@@ -40,7 +43,7 @@ public class SimpleFSM : FSM
         isDead = false;
         elapsedTime = 0f;
         shootRate = 3f;
-        health = 200;
+        health = 300;
 
         // Get the list of waypoints
         pointList = GameObject.FindGameObjectsWithTag("WanderPoint");
@@ -65,6 +68,9 @@ public class SimpleFSM : FSM
 
         renderer = tankBody.GetComponent<Renderer>();
         renderer.material = patrolMat;
+        // Healthbar
+        healthBar = gameObject.GetComponentInChildren<HealthBar>();
+        healthBar.SetMaxValue(health);
     }
 
     protected override void FSMFixedUpdate()
@@ -125,19 +131,22 @@ public class SimpleFSM : FSM
         // Set the target position as the player position
         destPos = playerTransform.position;
         // Check the distance with the player tank. When the distance is near, transition to attack state
-        float _dist = Vector3.Distance(transform.position, playerTransform.position);
+        float _dist = Vector3.Distance(transform.position, destPos);
 
-        if (_dist <= attackDistance)
+        if (_dist < attackDistance)
         {
             curState = FSMState.Attack;
         }
         // Go back to patrol if the player is too far
-        else if (_dist >= chaseDistance)
+        else if (_dist > chaseDistance)
         {
             curState = FSMState.Patrol;
         }
 
-        // Move forward
+        // Rotate to the player
+        Quaternion _targetRotation = Quaternion.LookRotation(destPos - transform.position);
+        transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, Time.deltaTime * curRotSpeed);
+        // Chase the player
         transform.Translate(Vector3.forward * Time.deltaTime * curSpeed);
     }
 
@@ -177,6 +186,7 @@ public class SimpleFSM : FSM
         // Show the dying animation with some physics effects
         if (!isDead)
         {
+            renderer.material = blownUpMat;
             isDead = true;
             Explode();
         }
@@ -242,6 +252,7 @@ public class SimpleFSM : FSM
         if (collision.gameObject.tag == "Bullet")
         {
             health -= collision.gameObject.GetComponent<Bullet>().damage;
+            healthBar.SetHealth(health);
         }
     }
 }
